@@ -34,6 +34,34 @@ test('time: day to hours to seconds', () => {
   closeTo(convert(1, 'h', 's').value, 3600);
 });
 
+test('area: km2 to m2', () => {
+  closeTo(convert(1, 'km2', 'm2').value, 1000000);
+});
+
+test('area: acre to m2', () => {
+  // legal US definition, exact
+  closeTo(convert(1, 'acre', 'm2').value, 4046.8564224);
+});
+
+test('area: mi2 to ft2', () => {
+  // 1 mi2 is exactly 5280^2 = 27,878,400 ft2
+  closeTo(convert(1, 'mi2', 'ft2').value, 27878400);
+});
+
+test('volume: gal to cup', () => {
+  // 1 US gallon is exactly 16 cups
+  closeTo(convert(1, 'gal', 'cup').value, 16);
+});
+
+test('volume: tbsp to tsp', () => {
+  // 1 US tablespoon is exactly 3 teaspoons
+  closeTo(convert(1, 'tbsp', 'tsp').value, 3);
+});
+
+test('volume: m3 to L', () => {
+  closeTo(convert(1, 'm3', 'L').value, 1000);
+});
+
 test('temperature: boiling point C to F', () => {
   closeTo(convert(100, 'C', 'F').value, 212);
 });
@@ -75,6 +103,8 @@ test('dimensionOf finds the right table', () => {
   assert.equal(dimensionOf('kg'), 'mass');
   assert.equal(dimensionOf('ft'), 'length');
   assert.equal(dimensionOf('min'), 'time');
+  assert.equal(dimensionOf('m2'), 'area');
+  assert.equal(dimensionOf('L'), 'volume');
 });
 
 test('dimensionOf returns null for unknown or temperature units', () => {
@@ -86,7 +116,7 @@ test('dimensionOf returns null for unknown or temperature units', () => {
 test('supportedUnits lists every unit exactly once', () => {
   const units = supportedUnits();
   assert.equal(new Set(units).size, units.length);
-  for (const u of ['m', 'km', 'kg', 'lb', 's', 'h', 'C', 'F', 'K']) {
+  for (const u of ['m', 'km', 'kg', 'lb', 's', 'h', 'C', 'F', 'K', 'm2', 'acre', 'L', 'gal']) {
     assert.ok(units.includes(u), `missing ${u}`);
   }
 });

@@ -28,7 +28,17 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
 
 server.setRequestHandler(CallToolRequestSchema, async (req) => {
   if (req.params.name !== 'convert') throw new Error(`Unknown tool: ${req.params.name}`);
-  const { value, from, to } = req.params.arguments as { value: number; from: string; to: string };
+  const args = req.params.arguments ?? {};
+  const { value, from, to } = args as { value: unknown; from: unknown; to: unknown };
+  if (typeof value !== 'number') {
+    return { content: [{ type: 'text', text: `Error: value must be a number, got ${typeof value}` }], isError: true };
+  }
+  if (typeof from !== 'string') {
+    return { content: [{ type: 'text', text: `Error: from must be a string, got ${typeof from}` }], isError: true };
+  }
+  if (typeof to !== 'string') {
+    return { content: [{ type: 'text', text: `Error: to must be a string, got ${typeof to}` }], isError: true };
+  }
   try {
     const r = convert(value, from, to);
     return { content: [{ type: 'text', text: `${value} ${from} = ${r.value} ${to}` }] };
